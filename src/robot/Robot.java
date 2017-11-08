@@ -9,8 +9,6 @@ Rules:
 */
 package robot;
 
-import java.util.Arrays;
-
 public class Robot {
 
     private int position;
@@ -50,10 +48,8 @@ public class Robot {
 
     public void lowerBlock(int block) {
 
-        int[] boxes = box.getBoxes();
-
-        if (box.isSpaceLeft(position) == true && holdsBlock == true) {
-            boxes[position] += block;
+        if (holdsBlock == true) {
+            box.addBlock(position, block);
             holdsBlock = false;
             position = 0;
         }
@@ -62,44 +58,25 @@ public class Robot {
 
     public void decodeCommands(String command) {
 
-        boolean endOfCommand;
         int block = 0;
 
-        do {
-            for(String s : command.split("")) {
+        for(String s : command.split("")) {
 
-                if (s.equals("P"))
-                    block = pickUpBlock();
-                else if (s.equals("M"))
-                    moveBlock();
-                else if (s.equals("L"))
-                    lowerBlock(block);
-            }
-            endOfCommand = true;
-        }
-        while (!endOfCommand);
-    }
-
-
-    public String showInfo() {
-
-        String info;
-        int[] quantityOfBlocks = new int[box.getNumberOfBoxes()];
-
-        for (int i = 0; i<box.getNumberOfBoxes(); i++) {
-            quantityOfBlocks[i] = box.blocksInTheBox(i);
+            if (s.equals("P"))
+                block = pickUpBlock();
+            else if (s.equals("M"))
+                moveBlock();
+            else if (s.equals("L"))
+                lowerBlock(block);
         }
 
-        info = Arrays.toString(quantityOfBlocks);
-        return info;
     }
 
-    public String start(String command) {
+    public void start(String command) {
 
         decodeCommands(command);
-        String info = showInfo();
+        box.showInfo();
 
-        return info;
 
     }
 
