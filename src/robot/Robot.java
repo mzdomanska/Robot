@@ -15,8 +15,6 @@ public class Robot {
     private boolean holdsBlock;
     private int previousBlock;
 
-    Box box = new Box();
-
     public Robot() {
         this.position = 0;
         this.holdsBlock = false;
@@ -26,7 +24,7 @@ public class Robot {
 
         int block;
 
-        if (holdsBlock == true) {
+        if (holdsBlock) {
             block = previousBlock;
             position = 0;
         }
@@ -38,47 +36,22 @@ public class Robot {
         return block;
     }
 
-    public void moveBlock() {
+    public void moveBlock(BoxManager boxManager) {
 
-        if (position + 1 > box.getNumberOfBoxes()-1) position = box.getNumberOfBoxes()-1;
+        if (position > boxManager.getNumberOfBoxes()) position = boxManager.getNumberOfBoxes()-1;
 
         else position += 1;
 
     }
 
-    public void lowerBlock(int block) {
+    public void lowerBlock(int block, BoxManager boxManager) {
 
-        if (holdsBlock == true) {
-            box.addBlock(position, block);
+        if (holdsBlock) {
+            boxManager.addBlock(position, block);
             holdsBlock = false;
             position = 0;
         }
         else return;
     }
-
-    public void decodeCommands(String command) {
-
-        int block = 0;
-
-        for(String s : command.split("")) {
-
-            if (s.equals("P"))
-                block = pickUpBlock();
-            else if (s.equals("M"))
-                moveBlock();
-            else if (s.equals("L"))
-                lowerBlock(block);
-        }
-
-    }
-
-    public void start(String command) {
-
-        decodeCommands(command);
-        box.showInfo();
-
-
-    }
-
 
 }
